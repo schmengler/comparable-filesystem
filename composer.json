@@ -1,0 +1,32 @@
+{
+  "name" : "sgh/comparable-filesystem",
+  "description" : "Provides Comparators for the file system.",
+  "version" : "1.0.0",
+  "require" : {
+    "php" : ">=5.4.0",
+    "sgh/comparable" : ">=1.0.0"
+  },
+  "require-dev" : {
+    "phpunit/phpunit" : "4.*",
+    "mikey179/vfsStream" : "1.*"
+  },
+  "authors" : [ {
+    "name" : "Fabian Schmengler",
+    "email" : "fschmengler@sgh-it.eu",
+    "homepage" : "http://www.schmengler-se.de/",
+    "role" : "Developer"
+  } ],
+  "autoload-dev" : {
+    "psr-4" : {
+      "SGH\\Comparable\\Filesystem\\Test\\" : "tests"
+    }
+  },
+  "keywords" : [ "comparable", "comparator", "splfileinfo" ],
+  "autoload" : {
+    "psr-4" : {
+      "SGH\\Comparable\\Filesystem\\" : "src"
+    }
+  },
+  "license" : "MIT",
+  "homepage" : "https://github.com/schmengler/comparable-filesystem"
+}
