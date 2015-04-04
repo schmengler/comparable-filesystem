@@ -4,6 +4,7 @@ namespace SGH\Comparable\Filesystem\Test\Comparator;
 use SGH\Comparable\Filesystem\Comparator\FileTypeComparator;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
+use org\bovigo\vfs\vfsStreamDirectory;
 
 /**
  * FileTypeComparator test case.
@@ -21,7 +22,7 @@ class FileTypeComparatorTest extends \PHPUnit_Framework_TestCase
      *
      * @var FileTypeComparator
      */
-    private $fileNameComparator;
+    private $fileTypeComparator;
 
     private $vfsRoot;
     /**
@@ -30,7 +31,7 @@ class FileTypeComparatorTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();        
-        $this->fileNameComparator = new FileTypeComparator();
+        $this->fileTypeComparator = new FileTypeComparator();
         $this->vfsRoot = vfsStream::setup();
     }
 
@@ -39,7 +40,7 @@ class FileTypeComparatorTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $this->fileNameComparator = null;
+        $this->fileTypeComparator = null;
         $this->vfsRoot = null;
         parent::tearDown();
     }
@@ -48,18 +49,23 @@ class FileTypeComparatorTest extends \PHPUnit_Framework_TestCase
      * Tests FileTypeComparator->compare()
      * 
      * @test
-     * @dataProvider dataFileNames
      */
-    public function testCompare($fileName1, $fileName2)
+    public function testCompare()
     {
-        $file1 = new vfsStreamFile($fileName1);
+        $file1 = new vfsStreamFile('file1.zip');
         $this->vfsRoot->addChild($file1);
-        $file2 = new vfsStreamFile($fileName2);
+        $file2 = new vfsStreamFile('file2.txt');
         $this->vfsRoot->addChild($file2);
-        $actualResult = $this->fileNameComparator->compare(
+        $dir = new vfsStreamDirectory('dir');
+        $this->vfsRoot->addChild($dir);
+        
+        $this->assertEquals(0, $this->fileTypeComparator->compare(
             new \SplFileInfo($file1->url()),
-            new \SplFileInfo($file2->url()));
-        $this->assertEquals(strcmp(pathinfo($fileName1, PATHINFO_EXTENSION), pathinfo($fileName2, PATHINFO_EXTENSION)), $actualResult);
+            new \SplFileInfo($file2->url())), 'Both type "file"');
+        $this->assertLessThan(0, $this->fileTypeComparator->compare(
+            new \SplFileInfo($dir->url()),
+            new \SplFileInfo($file2->url())), 'type "dir" < type "file"');
+        $this->markTestIncomplete('Cannot test type "link" with vfsStream');
     }
     /**
      * Tests FileTypeComparator::calback()
@@ -70,19 +76,6 @@ class FileTypeComparatorTest extends \PHPUnit_Framework_TestCase
     {
         $callback = FileTypeComparator::callback();
         $this->assertInstanceOf('\SGH\Comparable\Comparator\InvokableComparator', $callback);
-    }
-    /**
-     * Data provider for testCompare()
-     * 
-     * @return string[][]
-     */
-    public static function dataFileNames()
-    {
-        return array(
-            [ 'file.txt', 'file.zip' ],
-            [ 'file.zip', 'file.txt' ],
-            [ 'file1.txt', 'file2.txt' ],
-        );
     }
 }
 
