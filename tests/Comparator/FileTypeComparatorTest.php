@@ -1,12 +1,12 @@
 <?php
 namespace SGH\Comparable\Filesystem\Test\Comparator;
 
-use SGH\Comparable\Filesystem\Comparator\FileCTimeComparator;
+use SGH\Comparable\Filesystem\Comparator\FileTypeComparator;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
 
 /**
- * FileCTimeComparator test case.
+ * FileTypeComparator test case.
  * 
  * @author Fabian Schmengler <fschmengler@sgh-it.eu>
  * @copyright &copy; 2015 SGH informationstechnologie UG
@@ -15,13 +15,13 @@ use org\bovigo\vfs\vfsStreamFile;
  * @package Comparable\Filesystem
  * @since 1.0.0
  */
-class FileCTimeComparatorTest extends \PHPUnit_Framework_TestCase
+class FileTypeComparatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      *
-     * @var FileCTimeComparator
+     * @var FileTypeComparator
      */
-    private $fileCTimeComparator;
+    private $fileNameComparator;
 
     private $vfsRoot;
     /**
@@ -30,7 +30,7 @@ class FileCTimeComparatorTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();        
-        $this->fileCTimeComparator = new FileCTimeComparator();
+        $this->fileNameComparator = new FileTypeComparator();
         $this->vfsRoot = vfsStream::setup();
     }
 
@@ -39,48 +39,49 @@ class FileCTimeComparatorTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $this->fileCTimeComparator = null;
+        $this->fileNameComparator = null;
         $this->vfsRoot = null;
         parent::tearDown();
     }
 
     /**
-     * Tests FileCTimeComparator->compare()
+     * Tests FileTypeComparator->compare()
      * 
      * @test
-     * @dataProvider dataFileTimes
+     * @dataProvider dataFileNames
      */
-    public function testCompare($fileCTime1, $fileCTime2)
+    public function testCompare($fileName1, $fileName2)
     {
-        $file1 = new vfsStreamFile('file1');
-        $this->vfsRoot->addChild($file1->lastAttributeModified($fileCTime1));
-        $file2 = new vfsStreamFile('file2');
-        $this->vfsRoot->addChild($file2->lastAttributeModified($fileCTime2));
-        $actualResult = $this->fileCTimeComparator->compare(
+        $file1 = new vfsStreamFile($fileName1);
+        $this->vfsRoot->addChild($file1);
+        $file2 = new vfsStreamFile($fileName2);
+        $this->vfsRoot->addChild($file2);
+        $actualResult = $this->fileNameComparator->compare(
             new \SplFileInfo($file1->url()),
             new \SplFileInfo($file2->url()));
-        $this->assertEquals($fileCTime1 - $fileCTime2, $actualResult);
+        $this->assertEquals(strcmp(pathinfo($fileName1, PATHINFO_EXTENSION), pathinfo($fileName2, PATHINFO_EXTENSION)), $actualResult);
     }
     /**
-     * Tests FileCTimeComparator::calback()
+     * Tests FileTypeComparator::calback()
      * 
      * @test
      */
     public function testCallback()
     {
-        $callback = FileCTimeComparator::callback();
+        $callback = FileTypeComparator::callback();
         $this->assertInstanceOf('\SGH\Comparable\Comparator\InvokableComparator', $callback);
     }
     /**
      * Data provider for testCompare()
      * 
-     * @return int[][]
+     * @return string[][]
      */
-    public static function dataFileTimes()
+    public static function dataFileNames()
     {
         return array(
-            [ strtotime('01-01-2000 00:00:00'), strtotime('01-01-2000 00:00:01') ],
-            [ strtotime('01-01-1969 00:00:00'), strtotime('01-01-1971 00:00:00') ],
+            [ 'file.txt', 'file.zip' ],
+            [ 'file.zip', 'file.txt' ],
+            [ 'file1.txt', 'file2.txt' ],
         );
     }
 }

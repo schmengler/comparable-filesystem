@@ -62,6 +62,16 @@ class FileATimeComparatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($fileATime1 - $fileATime2, $actualResult);
     }
     /**
+     * Tests FileATimeComparator::calback()
+     * 
+     * @test
+     */
+    public function testCallback()
+    {
+        $callback = FileATimeComparator::callback();
+        $this->assertInstanceOf('\SGH\Comparable\Comparator\InvokableComparator', $callback);
+    }
+    /**
      * Data provider for testCompare()
      * 
      * @return int[][]

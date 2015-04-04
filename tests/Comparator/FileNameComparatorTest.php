@@ -62,6 +62,25 @@ class FileNameComparatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(strcmp($fileName1, $fileName2), $actualResult);
     }
     /**
+     * Tests FileNameComparator::calback()
+     *
+     * @test
+     */
+    public function testCallback()
+    {
+        $callback = FileNameComparator::callback();
+        $this->assertInstanceOf('\SGH\Comparable\Comparator\InvokableComparator', $callback);
+    }
+    /**
+     * @test
+     * @dataProvider dataInvalidArguments
+     * @expectedException \SGH\Comparable\ComparatorException
+     */
+    public function testInvalidArguments($object1, $object2)
+    {
+        $this->fileNameComparator->compare($object1, $object2);
+    }
+    /**
      * Data provider for testCompare()
      * 
      * @return string[][]
@@ -73,6 +92,21 @@ class FileNameComparatorTest extends \PHPUnit_Framework_TestCase
             [ 'file_a.txt', 'file_b.txt' ],
             [ 'file_a.txt', 'file_ab.txt' ],
             [ 'file_10.txt', 'file_2.txt' ],
+        );
+    }
+    /**
+     * Data provider for testInvalidArguments()
+     * 
+     * @return mixed[][]
+     */
+    public static function dataInvalidArguments()
+    {
+        return array(
+        	[ new \SplFileInfo(__FILE__), new \stdClass() ],
+        	[ new \stdClass(), new \SplFileInfo(__FILE__) ],
+            [ 'string', new \SplFileInfo(__FILE__) ],
+            [ 42, new \SplFileInfo(__FILE__) ],
+            [ __FILE__, new \SplFileInfo(__FILE__) ],
         );
     }
 }

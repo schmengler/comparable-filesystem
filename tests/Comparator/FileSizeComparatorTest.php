@@ -62,6 +62,16 @@ class FileSizeComparatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($fileSize1 - $fileSize2, $actualResult);
     }
     /**
+     * Tests FileSizeComparator::calback()
+     * 
+     * @test
+     */
+    public function testCallback()
+    {
+        $callback = FileSizeComparator::callback();
+        $this->assertInstanceOf('\SGH\Comparable\Comparator\InvokableComparator', $callback);
+    }
+    /**
      * Data provider for testCompare()
      * 
      * @return int[][]

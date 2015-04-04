@@ -62,6 +62,16 @@ class FileMTimeComparatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($fileMTime1 - $fileMTime2, $actualResult);
     }
     /**
+     * Tests FileMTimeComparator::calback()
+     * 
+     * @test
+     */
+    public function testCallback()
+    {
+        $callback = FileMTimeComparator::callback();
+        $this->assertInstanceOf('\SGH\Comparable\Comparator\InvokableComparator', $callback);
+    }
+    /**
      * Data provider for testCompare()
      * 
      * @return int[][]
