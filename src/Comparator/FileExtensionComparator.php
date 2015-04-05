@@ -9,7 +9,7 @@ namespace SGH\Comparable\Filesystem\Comparator;
  * @license MIT
  * @link http://opensource.org/licenses/mit-license.php
  * @package Comparable\Filesystem
- * @since 1.0.0
+ * @since 1.1.0
  */
 class FileExtensionComparator extends AbstractFileComparator
 {

@@ -2,7 +2,7 @@
 namespace SGH\Comparable\Filesystem\Comparator;
 
 /**
- * Compares file types
+ * Compares file types (types are "dir", "file" and "link")
  * 
  * @author Fabian Schmengler <fschmengler@sgh-it.eu>
  * @copyright &copy; 2015 SGH informationstechnologie UG
