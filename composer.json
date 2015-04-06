@@ -1,7 +1,6 @@
 {
   "name" : "sgh/comparable-filesystem",
   "description" : "Provides Comparators for the file system.",
-  "version" : "1.0.0",
   "require" : {
     "php" : ">=5.4.0",
     "sgh/comparable" : ">=1.0.0"
